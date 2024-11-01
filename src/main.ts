@@ -60,7 +60,7 @@ export default (options: PluginOptions = defaultValues): EsbuildPlugin => {
         }
 
         await fs.writeFile(path.join(outPath, fileName), fileContent);
-        const contents = path.join(options.outDir + fileName);
+        const contents = path.join(options.outDir, fileName);
         return {
           contents,
           watchFiles: [args.path],

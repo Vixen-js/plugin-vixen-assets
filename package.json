@@ -1,6 +1,6 @@
 {
   "name": "@vixen-js/plugin-vixen-assets",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Esbuild plugin to copy vixen js asssets",
   "main": "dist/main.js",
   "type": "module",

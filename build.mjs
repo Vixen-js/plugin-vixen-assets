@@ -1,9 +1,9 @@
 import * as esbuild from "esbuild";
-import vixenAssets from "../dist/main.js";
+import vixenAssets from "./dist/main.js";
 
 await esbuild.build({
-  entryPoints: ["./index.ts"],
-  outdir: "./dist",
+  entryPoints: ["./test/index.ts"],
+  outdir: "./distCustom",
   outExtension: {
     ".js": ".cjs",
   },
@@ -12,7 +12,7 @@ await esbuild.build({
   target: "node18",
   format: "cjs",
   minify: true,
-  tsconfig: "../tsconfig.json",
+  tsconfig: "tsconfig.json",
   packages: "external",
-  plugins: [vixenAssets()],
+  plugins: [vixenAssets({ outDir: "./distCustom" })],
 });

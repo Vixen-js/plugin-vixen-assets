@@ -18,18 +18,19 @@ function generateRandNameSpace() {
   );
 }
 
-export default (options: PluginOptions): EsbuildPlugin => {
-  const namespace = generateRandNameSpace();
-  const { filterRegexp = /\.(png|svg|jpg|jpeg|gif)$/, outDir = "./dist" } =
-    options;
+const defaultValues = {
+  filterRegexp: /\.(png|svg|jpg|jpeg|gif)/,
+  outDir: "./dist",
+};
 
-  let originalDir = "";
+export default (options: PluginOptions = defaultValues): EsbuildPlugin => {
+  options = { ...defaultValues, ...options };
+  const namespace = generateRandNameSpace();
 
   return {
     name: "plugin-vixen-assets",
     setup(build) {
-      build.onResolve({ filter: filterRegexp }, async (args: any) => {
-        originalDir = args.resolveDir;
+      build.onResolve({ filter: options.filterRegexp }, async (args: any) => {
         let cleanPath = path.resolve(args.resolveDir, args.path);
 
         try {
@@ -37,7 +38,7 @@ export default (options: PluginOptions): EsbuildPlugin => {
         } catch (_) {
           cleanPath = path.resolve(
             args.resolveDir,
-            args.path.replace(filterRegexp, "")
+            args.path.replace(options.filterRegexp, "")
           );
         }
 
@@ -50,7 +51,7 @@ export default (options: PluginOptions): EsbuildPlugin => {
       build.onLoad({ filter: /.*/, namespace }, async (args: any) => {
         let fileContent = await fs.readFile(args.path);
         const fileName = path.basename(args.path);
-        const outPath = path.resolve(originalDir, outDir);
+        const outPath = path.resolve(process.cwd(), options.outDir);
 
         try {
           await fs.access(outPath);
